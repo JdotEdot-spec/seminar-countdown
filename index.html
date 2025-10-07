@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seminar-Countdown</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 50% 30%, #1a1f2a, #0a0c10);
+      color: #e9ecf8;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .flip {
+      display: inline-flex;
+      gap: 0.4rem;
+      perspective: 1000px;
+      align-items: end;
+      justify-content: center;
+    }
+
+    .digit {
+      position: relative;
+      width: 70px;
+      height: 100px;
+      background: linear-gradient(180deg, #171e2f, #0f1422);
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-weight: 800;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .digit::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(180deg, transparent 49%, rgba(0, 0, 0, .25) 51%);
+      pointer-events: none;
+    }
+
+    .digit span {
+      font-size: 80px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .label, .fineprint {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #aab1c7;
+      text-align: center;
+    }
+
+    .fineprint {
+      margin-top: 2rem;
+      font-family: serif;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>So oft musst du das Seminar noch aushalten:</h1>
+  <div id="mondays" class="flip"></div>
+  <div class="label">Verbleibende Termine</div>
+
+  <div id="daysClock" class="flip" style="margin-top:1rem;"></div>
+  <div class="label">Tage · Stunden · Minuten</div>
+
+  <div class="fineprint">bis die Hölle vorbei ist.</div>
+
+  <script>
+    // Aufgelistete Montage
+    const mondaysList = [
+      '2025-10-06','2025-10-27','2025-11-03','2025-11-10','2025-11-17','2025-11-24',
+      '2025-12-01','2025-12-08','2025-12-15','2026-01-12','2026-01-19','2026-01-26','2026-02-02'
+    ].map(d => new Date(d + 'T00:00:00'));
+
+    function renderDigits(container, str) {
+      container.innerHTML = '';
+      String(str).split('').forEach(ch => {
+        const d = document.createElement('div');
+        d.className = 'digit';
+        d.innerHTML = `<span>${ch}</span>`;
+        container.appendChild(d);
+      });
+    }
+
+    function pad(n){ return n.toString().padStart(2, '0'); }
+
+    function update() {
+      const now = new Date();
+      const remainingMondays = mondaysList.filter(d => d >= now).length;
+      renderDigits(document.getElementById('mondays'), remainingMondays);
+
+      const lastMonday = mondaysList[mondaysList.length - 1];
+      let diff = lastMonday.getTime() - now.getTime();
+      if (diff < 0) diff = 0;
+      const totalMinutes = Math.floor(diff / 60000);
+      const days = Math.floor(totalMinutes / 1440);
+      const hours = Math.floor((totalMinutes % 1440) / 60);
+      const mins = totalMinutes % 60;
+      const display = `${days}:${pad(hours)}:${pad(mins)}`;
+      renderDigits(document.getElementById('daysClock'), display);
+    }
+
+    update();
+    setInterval(update, 60000);
+  </script>
+</body>
+</html>
