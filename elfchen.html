@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elfchen</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at 50% 30%, #1a1f2a, #0a0c10);
+    color: #e9ecf8;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    text-align: center;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem 3rem;
+    max-width: 500px;
+    box-shadow: 0 8px 30px rgba(255,255,255,0.08);
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  .line {
+    margin: 0.3rem 0;
+    font-size: 1.4rem;
+  }
+
+  .glass-button {
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    padding: 1rem 2rem;
+    color: #e9ecf8;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 30px rgba(255,255,255,0.08);
+    transition: all 0.3s ease;
+  }
+
+  .glass-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+  }
+
+  footer { margin-top: 3rem; font-size: 0.9rem; }
+  footer a { color: #9fa7c7; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <div class="glass" id="elfchen"></div>
+  <button class="glass-button" onclick="newElfchen()">Neues Elfchen</button>
+  <footer><a href="index.html">Zurück</a></footer>
+
+  <script>
+    const elfchenList = [
+      ["Nebel", "schleicht", "durch alte Straßen", "flüstert von gestern", "Geheimnis"],
+      ["Morgen", "golden", "durchbricht die Stille", "atmet neues Leben", "Hoffnung"],
+      ["Regen", "tropft", "auf mein Fenster", "singt leise Lieder", "Träumen"]
+    ];
+
+    function newElfchen() {
+      const e = elfchenList[Math.floor(Math.random() * elfchenList.length)];
+      const box = document.getElementById('elfchen');
+      box.innerHTML = e.map(line => `<p class='line'>${line}</p>`).join('');
+      box.style.opacity = 0;
+      box.style.animation = 'none';
+      setTimeout(() => {
+        box.style.animation = 'fadeIn 1s forwards';
+      }, 10);
+    }
+
+    newElfchen();
+  </script>
+</body>
+</html>
